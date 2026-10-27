@@ -2,6 +2,8 @@ import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
+// console.log("Your DB connection String is: ", process.env.JWT_SECRET ?  'FOUND' : "NOT FOUND")
+// console.log(process.cwd())
 
 export const db = new Pool({
   connectionString: process.env.DATABASE_URL,

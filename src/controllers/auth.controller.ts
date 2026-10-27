@@ -6,9 +6,9 @@ import { db } from '../config/db';
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
 export const register = async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password, role } = req.body;
+  const { first_name, last_name, email, password, role } = req.body;
 
-  if (!firstName || !lastName || !email || !password) {
+  if (!first_name || !last_name || !email || !password) {
     return res.status(400).json({ message: 'Full name, email, and password are required' });
   }
 
@@ -20,13 +20,14 @@ export const register = async (req: Request, res: Response) => {
 
     const saltRounds = 10;
     const password_hash = await bcrypt.hash(password, saltRounds);
+    console.log(password_hash)
     const userRole = role === 'INSTRUCTOR' || role === 'ADMIN' ? role : 'STUDENT';
 
     const newUser = await db.query(
-      `INSERT INTO users (full_name, email, password_hash, role) 
+      `INSERT INTO users (firstName, lastName, email, password_hash, role) 
        VALUES ($1, $2, $3, $4) 
-       RETURNING id, full_name, email, role, created_at`,
-      [firstName, lastName, email, password_hash, userRole]
+       RETURNING id, firstName, lastName, email, role, created_at`,
+      [first_name, last_name, email, password_hash, userRole]
     );
 
     const user = newUser.rows[0];

@@ -1,20 +1,51 @@
 {
   "compilerOptions": {
+    /* Language */
     "target": "ES2022",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "lib": ["ES2023"],
-    "outDir": "dist",
-    "rootDir": "src",
+    "lib": ["ES2022"],
+
+    /* Modules */
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    /* Project Structure */
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    /* Type Checking */
     "strict": true,
-    "noImplicitOverride": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+
+    /* JavaScript Interop */
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Modules */
     "resolveJsonModule": true,
+
+    /* Source Maps */
+    "sourceMap": true,
+
+    /* Output */
+    "removeComments": false,
+
+    /* Performance */
     "skipLibCheck": true,
+
+    /* Consistency */
     "forceConsistentCasingInFileNames": true,
-    "sourceMap": true
+
+    /* Incremental Builds */
+    "incremental": true,
+
+    /* Type Definitions */
+    "types": ["node"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
