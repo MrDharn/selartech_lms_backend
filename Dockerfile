@@ -1,13 +1,22 @@
+# Stage 1: Build stage
 FROM node:20-alpine AS builder
-
-WORKDIR /usr/src/app
-
+WORKDIR /app
 COPY package*.json ./
-RUN npm install
-
+RUN npm ci
 COPY . .
 RUN npm run build
 
+# Stage 2: Production runner stage
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy compiled JavaScript output from builder stage
+COPY --from=builder /app/dist ./dist
+
 EXPOSE 5000
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/app.js"]

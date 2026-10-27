@@ -1,11 +1,11 @@
-import { Response, NextFunction } from 'express';
+import {Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthenticatedRequest, TokenPayload } from '../types';
+import {TokenPayload } from '../types';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
 export const authenticateToken = (
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {

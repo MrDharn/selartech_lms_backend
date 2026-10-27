@@ -8,6 +8,8 @@
 
     "start": "node dist/app.js",
 
+    "seed": "tsx src/scripts/seed.ts",
+
     "db:generate": "prisma generate",
 
     "db:migrate": "prisma migrate dev"
@@ -30,6 +32,8 @@
 
     "jsonwebtoken": "^9.0.3",
 
+    "node-cron": "^4.6.0",
+
     "pg": "^8.23.1"
 
   },
@@ -45,6 +49,8 @@
     "@types/jsonwebtoken": "^9.0.10",
 
     "@types/node": "^26.6.5",
+
+    "@types/node-cron": "^3.0.11",
 
     "@types/pg": "^8.23.1",
 

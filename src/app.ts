@@ -1,13 +1,19 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { initExpirationCron } from './jobs/expiration.job';
+
 import authRoute from './routes/auth.route'
 import courseRoute from './routes/course.route'
+import progressRoutes from './routes/progress.route'
+import paymentRoutes from './routes/payment.route'
+import adminRoutes from './routes/admin.route'
 dotenv.config();
 
 const app: Application = express();
 
 app.use(cors());
+
 
 // Webhook route requires raw body parsing or signature validation before standard JSON parsing
 
@@ -19,6 +25,12 @@ app.get('/health', (_req: Request, res: Response) => {
 
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/courses', courseRoute);
+app.use('/api/v1/progress', progressRoutes);
+app.use('/api/v1/payments', paymentRoutes);
+app.use('api/v1/admin', adminRoutes)
+
+//Initialize background cron worker
+initExpirationCron()
 
 const PORT = process.env.PORT || 5000;
 
