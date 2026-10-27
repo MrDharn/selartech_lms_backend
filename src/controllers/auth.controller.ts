@@ -20,13 +20,13 @@ export const register = async (req: Request, res: Response) => {
 
     const saltRounds = 10;
     const password_hash = await bcrypt.hash(password, saltRounds);
-    console.log(password_hash)
+    // console.log(password_hash)
     const userRole = role === 'INSTRUCTOR' || role === 'ADMIN' ? role : 'STUDENT';
 
     const newUser = await db.query(
-      `INSERT INTO users (firstName, lastName, email, password_hash, role) 
-       VALUES ($1, $2, $3, $4) 
-       RETURNING id, firstName, lastName, email, role, created_at`,
+      `INSERT INTO users (first_name, last_name, email, password_hash, role) 
+       VALUES ($1, $2, $3, $4, $5) 
+       RETURNING id, first_name, last_name, email, role, created_at`,
       [first_name, last_name, email, password_hash, userRole]
     );
 
