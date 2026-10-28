@@ -6,7 +6,7 @@ import { AuthenticatedRequest } from '../types';
 export const getCourses = async (_req: Request, res: Response) => {
   try {
     const result = await db.query(
-      `SELECT c.id, c.title, c.description, c.price_ngn, u.full_name AS instructor_name
+      `SELECT c.id, c.title, c.description, c.price, u.first_name, u.last_name AS instructor_name
        FROM courses c
        LEFT JOIN users u ON c.instructor_id = u.id
        ORDER BY c.created_at DESC`
@@ -78,19 +78,19 @@ export const getCourseById = async (req: Request, res: Response) => {
 
 // Instructor/Admin: Create a new course
 export const createCourse = async (req: AuthenticatedRequest, res: Response) => {
-  const { title, description, price_ngn } = req.body;
+  const { title, description, price } = req.body;
   const instructorId = req.user?.id;
 
-  if (!title || price_ngn === undefined) {
+  if (!title || price === undefined) {
     return res.status(400).json({ message: 'Title and price_ngn are required' });
   }
 
   try {
     const result = await db.query(
-      `INSERT INTO courses (title, description, price_ngn, instructor_id)
+      `INSERT INTO courses (title, description, price, instructor_id)
        VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [title, description, price_ngn, instructorId]
+      [title, description, price, instructorId]
     );
 
     return res.status(201).json({
