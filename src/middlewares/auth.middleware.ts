@@ -1,11 +1,11 @@
-import {Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import {TokenPayload } from '../types';
+import { AuthenticatedRequest, TokenPayload } from '../types/index';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
 export const authenticateToken = (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -18,7 +18,7 @@ export const authenticateToken = (
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
-    req.user = decoded;
+    req.user = decoded; // ✅ Now TypeScript knows this is valid
     next();
   } catch (error) {
     return res.status(403).json({ message: 'Invalid or expired token' });
