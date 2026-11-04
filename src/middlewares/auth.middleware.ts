@@ -12,12 +12,13 @@ export const authenticateToken = (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-):Response | void=> {
+):void=> {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ message: 'Access token missing' });
+     res.status(401).json({ message: 'Access token missing' });
+     return
   }
 
   try {
@@ -25,7 +26,8 @@ export const authenticateToken = (
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(403).json({ message: 'Invalid or expired token' });
+    res.status(403).json({ message: 'Invalid or expired token' });
+    return
   }
 };
 
