@@ -6,7 +6,7 @@ import { AuthenticatedRequest } from '../types';
 export const getCourses = async (_req: Request, res: Response) => {
   try {
     const result = await db.query(
-      `SELECT c.id, c.title, c.description, c.price, u.first_name, u.last_name AS instructor_name
+      `SELECT c.id, c.title, c.description, c.price, u.full_name AS instructor_name
        FROM courses c
        LEFT JOIN users u ON c.instructor_id = u.id
        ORDER BY c.created_at DESC`

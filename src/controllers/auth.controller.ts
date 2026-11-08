@@ -64,9 +64,9 @@ export const googleAuth = async (req:Request, res:Response)=>{
   }
 }
 export const register = async (req: Request, res: Response) => {
-  const { first_name, last_name, email, password, role } = req.body;
+  const { full_name, email, password, role } = req.body;
 
-  if (!first_name || !last_name || !email || !password) {
+  if (!full_name || !email || !password) {
     return res.status(400).json({ message: 'Full name, email, and password are required' });
   }
 
@@ -82,10 +82,11 @@ export const register = async (req: Request, res: Response) => {
     const userRole = role === 'INSTRUCTOR' || role === 'ADMIN' ? role : 'STUDENT';
 
     const newUser = await db.query(
-      `INSERT INTO users (first_name, last_name, email, password_hash, role) 
-       VALUES ($1, $2, $3, $4, $5) 
-       RETURNING id, first_name, last_name, email, role, created_at`,
-      [first_name, last_name, email, password_hash, userRole]
+      `INSERT INTO users (full_name, email, password_hash, role) 
+       VALUES ($1, $2, $3, $4) 
+       RETURNING id, full_name, email, role, created_at`,
+
+      [full_name, email, password_hash, userRole]
     );
 
     const user = newUser.rows[0];
