@@ -2,7 +2,7 @@ import { db } from '../config/db';
 import bcrypt from 'bcrypt';
 
 async function seed() {
-  console.log('🌱 Starting database seeding...');
+  console.log('Starting database seeding...');
   const client = await db.connect();
 
   try {
@@ -93,11 +93,20 @@ async function seed() {
       );
     `);
 
-    // 3. Insert Admin & Instructor Users
+    // 3. Add Performance Indexes (New addition)
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_enrollments_student_course ON enrollments(student_id, course_id);
+      CREATE INDEX IF NOT EXISTS idx_enrollments_status ON enrollments(status);
+      CREATE INDEX IF NOT EXISTS idx_lessons_module_order ON lessons(module_id, order_index);
+      CREATE INDEX IF NOT EXISTS idx_lesson_progress_student ON lesson_progress(student_id, lesson_id);
+      CREATE INDEX IF NOT EXISTS idx_payments_reference ON payments(reference);
+    `);
+
+    // 4. Insert Admin & Instructor Users
     const adminPassword = await bcrypt.hash('AdminPassword123!', 10);
     const adminUser = await client.query(
       `INSERT INTO users (full_name, email, password_hash, role)
-       VALUES ('System Admin', 'admin@selahtech.com', $1, 'ADMIN')
+       VALUES ('System Admin', 'mydharn@gmail.com', $1, 'ADMIN')
        ON CONFLICT (email) DO UPDATE SET full_name = EXCLUDED.full_name
        RETURNING id`,
       [adminPassword]
@@ -105,7 +114,7 @@ async function seed() {
 
     const instructorId = adminUser.rows[0].id;
 
-    // 4. Insert Demo Course
+    // 5. Insert Demo Course
     const courseRes = await client.query(
       `INSERT INTO courses (title, description, price_ngn, instructor_id)
        VALUES ('Backend Development with Node.js & PostgreSQL', 'Comprehensive backend engineering course with TypeScript and Docker.', 50000.00, $1)
@@ -114,7 +123,7 @@ async function seed() {
     );
     const courseId = courseRes.rows[0].id;
 
-    // 5. Insert Module & Lessons
+    // 6. Insert Module & Lessons
     const moduleRes = await client.query(
       `INSERT INTO modules (course_id, title, order_index)
        VALUES ($1, 'Module 1: Getting Started', 1)
@@ -132,7 +141,7 @@ async function seed() {
     );
 
     await client.query('COMMIT');
-    console.log('✅ Database seeded successfully!');
+    console.log('✅ Database seeded and indexed successfully!');
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('❌ Error seeding database:', error);

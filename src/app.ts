@@ -8,6 +8,8 @@ import courseRoute from './routes/course.route'
 import progressRoutes from './routes/progress.route'
 import paymentRoutes from './routes/payment.route'
 import adminRoutes from './routes/admin.route'
+import { validateEnv } from './config/env';
+
 dotenv.config();
 
 const app: Application = express();
@@ -33,6 +35,8 @@ app.use('api/v1/admin', adminRoutes)
 initExpirationCron()
 
 const PORT = process.env.PORT || 5000;
+
+validateEnv(); 
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

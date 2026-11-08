@@ -3,6 +3,6 @@ CREATE TABLE lessons (
     module_id UUID REFERENCES modules(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     cloudinary_public_id VARCHAR(255) NOT NULL,
-    "order" INT NOT NULL,
+    order_index INT NOT NULL,
     is_free BOOLEAN DEFAULT FALSE
 );
